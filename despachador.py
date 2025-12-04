@@ -47,7 +47,18 @@ class Despachador:
 
             tempo_inicio, prioridade, tempo_cpu, blocos_mem, printer_code, scanner_req, modem_req, sata_code = parts
 
+            # Verificacao de prioridade
+            if prioridade < 0 or prioridade > 5:
+                with self.semaforo_print:
+                    print(f"\n[ERROR] Linha {contador} solicita prioridade {prioridade}, mas ela nao existe, entrada {contador} foi descartada.")
+                continue
+
             # Verificação de tamanho de memória
+            if blocos_mem < 0:
+                with self.semaforo_print:
+                    print(f"\n[ERROR] Processo nao pode consumir memoria negativa de tamanho {blocos_mem}, entrada {contador} foi descartada do arquivo processes.txt.")
+                continue
+
             if prioridade == 0 and blocos_mem > 64:
                 # Processo real não pode ter mais que 64 blocos
                 with self.semaforo_print:
@@ -60,22 +71,22 @@ class Despachador:
                     print(f"\n[ERROR] Processo de usuario possui tamanho {blocos_mem}, mas o espaco reservado de memoria reservado para processos de usuario e 960, entrada {contador} foi descartada do arquivo processes.txt.")
                 continue
 
-            if scanner_req > len([self.recursos.scanner]):  # só existe 1 scanner
+            if scanner_req > len([self.recursos.scanner]) or scanner_req < 0:  # só existe 1 scanner
                 with self.semaforo_print:
                     print(f"\n[ERROR] Linha {contador} solicita scanner {scanner_req}, mas ele nao existe, entrada {contador} foi descartada.")
                 continue
 
-            if printer_code > len(self.recursos.printers):  # duas impressoras
+            if printer_code > len(self.recursos.printers) or printer_code < 0:  # duas impressoras
                 with self.semaforo_print:
                     print(f"\n[ERROR] Linha {contador} solicita impressora {printer_code}, mas ela nao existe, entrada {contador} foi descartada.")
                 continue
 
-            if modem_req > len([self.recursos.modem]):  # só existe 1 modem
+            if modem_req > len([self.recursos.modem]) or modem_req < 0:  # só existe 1 modem
                 with self.semaforo_print:
                     print(f"\n[ERROR] Linha {contador} solicita modem {modem_req}, mas ele nao existe, entrada {contador} foi descartada.")
                 continue
 
-            if sata_code > len(self.recursos.sata):  # três portas SATA
+            if sata_code > len(self.recursos.sata) or sata_code < 0:  # três portas SATA
                 with self.semaforo_print:
                     print(f"\n[ERROR] Linha {contador} solicita dispositivo SATA{sata_code}, mas ele nao existe, entrada {contador} foi descartada.")
                 continue
@@ -86,6 +97,11 @@ class Despachador:
                  blocos_mem, printer_code, scanner_req,
                  modem_req, sata_code)
             )
+
+        if len(self.processes) == 0:
+            with self.semaforo_print:
+                print(f"\n[ERROR] Nenhum processo foi carregado")
+            self.escalonador.finalizado = True # Avisa o escaloandor que nao tera processos
 
     def load_filesystem(self):
         # Carrega configuração inicial do sistema de arquivos
@@ -198,7 +214,7 @@ class Despachador:
 
     def has_pending(self):
         # Verifica se ainda existem processos pendentes ou nao despachados
-        return len(self.processos_pendentes) > 0 or len(self.relacao_processos) > 0
+        return (len(self.processos_pendentes) > 0 and self.processos_criados < self.escalonador.capacity) or len(self.relacao_processos) > 0
 
     def criar_processo(self):
         # Inicializa lista de processos a despachar
@@ -319,6 +335,10 @@ class Despachador:
                         contador -= 1
                 contador += 1
 
+        if self.processos_criados == limite and self.processos_pendentes:
+            with self.semaforo_print:
+                print("\n[ERROR] Arquivo processes.txt possui mais de 100 processos")
+
         # Marca que o despachador terminou
         self.escalonador.despachador_finalizado = True
 
@@ -337,12 +357,14 @@ class Despachador:
                         logs.append(f"Operacao {i} => Sucesso\nO processo {pid} criou o arquivo {name}.")
                     else:
                         logs.append(f"Operacao {i} => Falha\nO processo {pid} nao pode criar o arquivo {name} (arquivo duplicado ou falta de espaco).")
-                else:  # Deletar arquivo
+                elif op == 1:  # Deletar arquivo
                     ok = self.file_manager.delete(proc.pid, name, proc.is_real_time)
                     if ok:
                         logs.append(f"Operacao {i} => Sucesso\nO processo {pid} deletou o arquivo {name}.")
                     else:
                         logs.append(f"Operacao {i} => Falha\nO processo {pid} nao pode deletar o arquivo {name}.")
+                else: 
+                    logs.append(f"Operacao {i} => Falha\nO processo {pid} informou um codigo de operacao invalido, codigo informado: {op}")
 
             # Mostra mapa de ocupacao do disco
             logs.append("\nMapa de ocupacao do disco:")

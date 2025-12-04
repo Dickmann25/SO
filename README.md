@@ -16,6 +16,7 @@ A execução do projeto é simples:
 python main.py
 Requisitos
 Python 3.13.5 (recomendado para garantir a execução correta e compatibilidade total)
+```
 
 ## Configuração das entradas
 As entradas do sistema são definidas por arquivos de texto. Para modificar o comportamento do sistema, basta editar:

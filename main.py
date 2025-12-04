@@ -3,7 +3,6 @@ import time
 import threading
 from despachador import Despachador
 from recursos import Recursos
-from dados import dados_processos
 from escalonador import Escalonador
 from memoria import MemoryManager
 from arquivos import FileManager
@@ -39,4 +38,5 @@ def main():
         time.sleep(0.1)  # pequeno intervalo para nao travar a CPU
 
 if __name__ == "__main__":
+
     main()

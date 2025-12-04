@@ -209,7 +209,7 @@ class Despachador:
 
     def has_pending(self):
         # Verifica se ainda existem processos pendentes ou nao despachados
-        return len(self.processos_pendentes) > 0 or len(self.relacao_processos) > 0
+        return (len(self.processos_pendentes) > 0 and self.processos_criados < self.escalonador.capacity) or len(self.relacao_processos) > 0
 
     def criar_processo(self):
         # Inicializa lista de processos a despachar
@@ -329,6 +329,10 @@ class Despachador:
                         self.pid += 1
                         contador -= 1
                 contador += 1
+
+        if self.processos_criados == limite and self.processos_pendentes:
+            with self.semaforo_print:
+                print("\n[ERROR] Arquivo processes.txt possui mais de 100 processos")
 
         # Marca que o despachador terminou
         self.escalonador.despachador_finalizado = True

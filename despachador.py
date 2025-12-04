@@ -93,6 +93,11 @@ class Despachador:
                  modem_req, sata_code)
             )
 
+        if len(self.processes) == 0:
+            with self.semaforo_print:
+                print(f"\n[ERROR] Nenhum processo foi carregado")
+            self.escalonador.finalizado = True # Avisa o escaloandor que nao tera processos
+
     def load_filesystem(self):
         # Carrega configuração inicial do sistema de arquivos
         with open(self.fileops_file) as f:

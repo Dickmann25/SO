@@ -66,22 +66,22 @@ class Despachador:
                     print(f"\n[ERROR] Processo de usuario possui tamanho {blocos_mem}, mas o espaco reservado de memoria reservado para processos de usuario e 960, entrada {contador} foi descartada do arquivo processes.txt.")
                 continue
 
-            if scanner_req > len([self.recursos.scanner]):  # só existe 1 scanner
+            if scanner_req > len([self.recursos.scanner]) or scanner_req < 0:  # só existe 1 scanner
                 with self.semaforo_print:
                     print(f"\n[ERROR] Linha {contador} solicita scanner {scanner_req}, mas ele nao existe, entrada {contador} foi descartada.")
                 continue
 
-            if printer_code > len(self.recursos.printers):  # duas impressoras
+            if printer_code > len(self.recursos.printers) or printer_code < 0:  # duas impressoras
                 with self.semaforo_print:
                     print(f"\n[ERROR] Linha {contador} solicita impressora {printer_code}, mas ela nao existe, entrada {contador} foi descartada.")
                 continue
 
-            if modem_req > len([self.recursos.modem]):  # só existe 1 modem
+            if modem_req > len([self.recursos.modem]) or modem_req < 0:  # só existe 1 modem
                 with self.semaforo_print:
                     print(f"\n[ERROR] Linha {contador} solicita modem {modem_req}, mas ele nao existe, entrada {contador} foi descartada.")
                 continue
 
-            if sata_code > len(self.recursos.sata):  # três portas SATA
+            if sata_code > len(self.recursos.sata) or sata_code < 0:  # três portas SATA
                 with self.semaforo_print:
                     print(f"\n[ERROR] Linha {contador} solicita dispositivo SATA{sata_code}, mas ele nao existe, entrada {contador} foi descartada.")
                 continue

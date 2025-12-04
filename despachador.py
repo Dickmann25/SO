@@ -352,12 +352,14 @@ class Despachador:
                         logs.append(f"Operacao {i} => Sucesso\nO processo {pid} criou o arquivo {name}.")
                     else:
                         logs.append(f"Operacao {i} => Falha\nO processo {pid} nao pode criar o arquivo {name} (arquivo duplicado ou falta de espaco).")
-                else:  # Deletar arquivo
+                elif op == 1:  # Deletar arquivo
                     ok = self.file_manager.delete(proc.pid, name, proc.is_real_time)
                     if ok:
                         logs.append(f"Operacao {i} => Sucesso\nO processo {pid} deletou o arquivo {name}.")
                     else:
                         logs.append(f"Operacao {i} => Falha\nO processo {pid} nao pode deletar o arquivo {name}.")
+                else: 
+                    logs.append(f"Operacao {i} => Falha\nO processo {pid} informou um codigo de operacao invalido, codigo informado: {op}")
 
             # Mostra mapa de ocupacao do disco
             logs.append("\nMapa de ocupacao do disco:")

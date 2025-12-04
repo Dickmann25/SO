@@ -47,6 +47,12 @@ class Despachador:
 
             tempo_inicio, prioridade, tempo_cpu, blocos_mem, printer_code, scanner_req, modem_req, sata_code = parts
 
+            # Verificacao de prioridade
+            if prioridade < 0 or prioridade > 5:
+                with self.semaforo_print:
+                    print(f"\n[ERROR] Linha {contador} solicita prioridade {prioridade}, mas ela nao existe, entrada {contador} foi descartada.")
+                continue
+
             # Verificação de tamanho de memória
             if prioridade == 0 and blocos_mem > 64:
                 # Processo real não pode ter mais que 64 blocos

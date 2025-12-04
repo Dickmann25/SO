@@ -54,6 +54,11 @@ class Despachador:
                 continue
 
             # Verificação de tamanho de memória
+            if blocos_mem < 0:
+                with self.semaforo_print:
+                    print(f"\n[ERROR] Processo nao pode consumir memoria negativa de tamanho {blocos_mem}, entrada {contador} foi descartada do arquivo processes.txt.")
+                continue
+
             if prioridade == 0 and blocos_mem > 64:
                 # Processo real não pode ter mais que 64 blocos
                 with self.semaforo_print:

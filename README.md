@@ -14,9 +14,10 @@ A execução do projeto é simples:
 
 ```bash
 python main.py
-Requisitos
-Python 3.13.5 (recomendado para garantir a execução correta e compatibilidade total)
 ```
+## Requisitos
+Python 3.13.5 (recomendado para garantir a execução correta e compatibilidade total)
+
 
 ## Configuração das entradas
 As entradas do sistema são definidas por arquivos de texto. Para modificar o comportamento do sistema, basta editar:
@@ -27,7 +28,7 @@ files.txt: define as operações e o estado inicial do sistema de arquivos.
 
 Não é necessário alterar o código-fonte para modificar as entradas; todas as configurações podem ser ajustadas por meio desses arquivos .txt.
 
-Observações
+## Observações
 O arquivo main.py é o ponto de entrada do sistema e responsável por inicializar as estruturas e iniciar o fluxo de execução.
 
 O funcionamento correto do projeto depende da presença e integridade de todos os arquivos Python e de entrada no diretório.

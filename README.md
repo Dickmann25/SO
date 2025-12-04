@@ -8,7 +8,7 @@ Este projeto consiste na implementação de um **pseudo sistema operacional**, d
 
 A execução do projeto é simples:
 
-1. Garanta que **todos os arquivos `.py` e `.txt`** estejam no **mesmo diretório**.
+1. Garanta que **todos os arquivos `.py`, `process.txt` e `files.txt`** estejam no **mesmo diretório**.
 2. Abra um terminal no diretório do projeto.
 3. Execute o arquivo principal:
 

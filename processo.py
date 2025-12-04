@@ -66,11 +66,11 @@ class Processo:
 
     # Aplica envelhecimento ao processo
     def age(self, tempo: int):
-        if (self.aging_counter + 1) > 6:
-            self.aging_counter = (self.aging_counter + tempo) % 6
+        self.aging_counter += tempo
+        while (self.aging_counter) > 20:
+            self.aging_counter -= 20
+            self.current_priority -= 1
             self.current_priority = max(self.current_priority, 1)
-        else:
-            self.aging_counter = (self.aging_counter + tempo) % 6
 
     # Atualiza tempo de inicializacao para o processo
     def tempo_init(self, tempo: int):
